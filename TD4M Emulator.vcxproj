@@ -123,7 +123,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core.cpp" />
+    <ClCompile Include="files.cpp" />
+    <ClCompile Include="registers.cpp" />
+    <ClCompile Include="securety_func.cpp" />
     <ClCompile Include="TD4M Emulator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core.h" />
+    <ClInclude Include="files.h" />
+    <ClInclude Include="Mybitset.h" />
+    <ClInclude Include="registers.h" />
+    <ClInclude Include="securety_func.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

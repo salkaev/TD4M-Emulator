@@ -1,0 +1,8 @@
+#pragma once
+#include"Mybitset.h"
+#include"registers.h"
+#include"securety_func.h"
+
+
+//Функция обработки функционала  команд//
+MyBitset<4> fun(string choce, string data);
