@@ -7,8 +7,8 @@ extern int ok ;
 extern char ch;
 extern MyBitset<4> a;
 extern MyBitset<4> Program_Counter ;
-extern int C_Flag ;
-extern MyBitset<4> Register_A, Register_B, Output_Port, Input_Port, chose_Instruction, choce, key;
+extern int C_Flag ,Z_Flag ;
+extern MyBitset<4> Register_A, Register_B, Output_Port, Input_Port, chose_Instruction, choce, key, nots;
 extern vector<vector<MyBitset<8>>> mapa;
 extern map<int, MyBitset<8>> coman;
 

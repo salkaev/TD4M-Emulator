@@ -118,21 +118,20 @@ void Zaur() {
         }
 
         // Работа с файлом
-        string file = "Zaur.txt";
+        string file = "C:\\Users\\salka\\source\\repos\\TD4M Emulator\\Zaur.txt";
         ifstream in(file);
         if (!in.is_open()) {
             cout << "Error: cannot open file '" << file << "'." << endl;
         }
+        else {
 
-        string data;
-        bool isEmpty = true;
-        while (std::getline(in, data)) {
-            cout << data << endl;
-            isEmpty = false;
+
+
+            string data;
+            while (std::getline(in, data)) {
+                cout << data << endl;
+            }
         }
         in.close();
 
-        if (isEmpty) {
-            cout << "Warning: file is empty." << endl;
-        }
 }

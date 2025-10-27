@@ -134,6 +134,79 @@ MyBitset<4> fun(string choce, string data) {
         Output_Port = bitset_var;
         return Register_A;
     }
+    // Команды где B7-B4 == 1000 //
+    if (choce == "1000") {
+
+        if (data == "0000") { //А <= A+B
+            Register_A+= Register_B;
+            return(Register_A);
+        }
+        if (data == "0001") { //A<= -A Вот это проблема так проблема //
+
+            string numb ="-" + Register_A.to_string();
+            MyBitset<4> bitset_var(numb);
+            Register_A = bitset_var;
+
+
+            return (Register_A);
+        }
+		//NOT A//
+        if (data == "0010") {
+          string   data_2 = Register_A.to_string();
+            for (auto i = 0; i < 4; i++) {
+                if(data[i]=='0'){
+                    data_2[i]='1';
+                }
+                else{
+                    data_2[i]='0';
+				}
+
+            }
+			MyBitset<4> bitset_var(data_2);
+            Register_A= bitset_var;
+			return (Register_A);
+        }
+
+		//OR A,B//
+        if (data == "0011") {
+            string   data_2 = Register_A.to_string();
+            string   data_3 = Register_B.to_string();
+            string   data_4;
+
+            for (int i = 0; i < 4; ++i) {
+                if (data_2[i] == "1" or data_3[i] == "1") {
+					data_4 += '1';
+                }
+                else {
+					data_4 += '0';
+                }
+            }
+
+        }
+
+		//AND A,B//
+        if (data == "0100") {
+            string   data_2 = Register_A.to_string();
+            string   data_3 = Register_B.to_string();
+            string   data_4;
+
+            for (int i = 0; i < 4; ++i) {
+                if (data_2[i] == "1" and data_3[i] == "1") {
+                    data_4 += '1';
+                }
+                else {
+                    data_4 += '0';
+                }
+            }
+
+
+        }
+		//XOR A,B//
+        if (data == "0100") {
+
+
+        }
+    }
 
     // неизвестная инструкция //
     cout << "Warning: unknown instruction '" << choce << "'. Ignored.\n";
