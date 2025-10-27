@@ -1,10 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include <map>
-#include <vector>
-#include <bitset>
-#include <string>
 #include"Mybitset.h"
 #include"securety_func.h"
 using namespace std;

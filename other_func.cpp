@@ -1,6 +1,10 @@
-#include"other_func.h"
-#include<iostream>
-
+#include "other_func.h"
+#include "registers.h"
+#include "securety_func.h" 
+#include <iostream>
+#include <limits>
+#include <algorithm>
+using namespace std;
 
 void  chose_input() {
     cout << "Zaur,choice value input_port";
@@ -36,5 +40,4 @@ void  Empty() {
             cout << "Position " << i.first << ": " << i.second << "\n";
         }
     }
-    break;
 }

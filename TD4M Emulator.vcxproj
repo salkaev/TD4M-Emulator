@@ -128,6 +128,7 @@
     <ClCompile Include="registers.cpp" />
     <ClCompile Include="securety_func.cpp" />
     <ClCompile Include="TD4M Emulator.cpp" />
+    <ClCompile Include="other_func.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
