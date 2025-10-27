@@ -21,7 +21,7 @@
 #include"securety_func.h"
 #include"files.h"
 #include"Core.h"
-#include<other_func.h>
+#include"other_func.h"
 
 
 using namespace std;
@@ -75,12 +75,14 @@ int main() {
 
         if (comand == 8){
             Zaur();
+            break;
         }
 
         if (comand == 6 )
 
         {
             chose_input();
+            break;
         }
         if (comand == 4) {
             cout << "Zaur,See you soon!";

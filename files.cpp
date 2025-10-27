@@ -1,6 +1,11 @@
-#include<files.h>
-
-
+#include"files.h"
+#include<fstream>
+#include<iostream>
+#include<sstream>
+#include <string>
+#include<cctype>
+#include"registers.h"
+#include<thread>
 //Открытие бинарного файла и запись его в карту команд //
 
 using namespace std;
@@ -117,7 +122,6 @@ void Zaur() {
         ifstream in(file);
         if (!in.is_open()) {
             cout << "Error: cannot open file '" << file << "'." << endl;
-            return 1;
         }
 
         string data;
@@ -131,6 +135,4 @@ void Zaur() {
         if (isEmpty) {
             cout << "Warning: file is empty." << endl;
         }
-
-        break;
 }

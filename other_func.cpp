@@ -1,7 +1,5 @@
-#include<securety_func.h>
+#include"other_func.h"
 #include<iostream>
-#include<other_func.h>
-using namespace std;
 
 
 void  chose_input() {
