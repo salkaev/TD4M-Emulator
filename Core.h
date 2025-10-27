@@ -6,3 +6,7 @@
 
 //Функция обработки функционала  команд//
 MyBitset<4> fun(string choce, string data);
+
+
+
+void Commands_from_the_register();

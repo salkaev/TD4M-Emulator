@@ -1,13 +1,5 @@
-#pragma once
-#include<iostream>
-#include<string>
-#include<vector>
-#include<cctype>
-#include<fstream>
-#include<sstream>
-#include"Mybitset.h"
-#include"registers.h"
-#include"securety_func.h"
+#include<files.h>
+
 
 //Открытие бинарного файла и запись его в карту команд //
 
@@ -92,4 +84,53 @@ void read_file() {
         ++count;
         if (count >= 16) break; // защита от переполнения карты
     }
+}
+void Zaur() {
+
+    
+        const vector<string> lines = {
+"ZZZZZZZZZZZZZZZZZZZ                                                      ",
+"Z:::::::::::::::::Z                                                      ",
+"Z:::::::::::::::::Z                                                      ",
+"Z:::ZZZZZZZZ:::::Z                                                       ",
+"ZZZZZ     Z:::::Z    aaaaaaaaaaaaa  uuuuuu    uuuuuu rrrrr   rrrrrrrrr   ",
+"        Z:::::Z      a::::::::::::a u::::u    u::::u r::::rrr:::::::::r  ",
+"       Z:::::Z       aaaaaaaaa:::::au::::u    u::::u r:::::::::::::::::r ",
+"      Z:::::Z                 a::::au::::u    u::::u rr::::::rrrrr::::::r",
+"     Z:::::Z           aaaaaaa:::::au::::u    u::::u  r:::::r     r:::::r",
+"    Z:::::Z          aa::::::::::::au::::u    u::::u  r:::::r     rrrrrrr",
+"   Z:::::Z          a::::aaaa::::::au::::u    u::::u  r:::::r            ",
+"ZZZ:::::Z     ZZZZZa::::a    a:::::au:::::uuuu:::::u  r:::::r            ",
+"Z::::::ZZZZZZZZ:::Za::::a    a:::::au:::::::::::::::uur:::::r            ",
+"Z:::::::::::::::::Za:::::aaaa::::::a u:::::::::::::::ur:::::r            ",
+"Z:::::::::::::::::Z a::::::::::aa:::a uu::::::::uu:::ur:::::r            ",
+"ZZZZZZZZZZZZZZZZZZZ  aaaaaaaaaa  aaaa   uuuuuuuu  uuuurrrrrrr            "
+        };
+
+        for (const auto& line : lines) {
+            cout << line << endl;
+            this_thread::sleep_for(chrono::milliseconds(100));
+        }
+
+        // Работа с файлом
+        string file = "Zaur.txt";
+        ifstream in(file);
+        if (!in.is_open()) {
+            cout << "Error: cannot open file '" << file << "'." << endl;
+            return 1;
+        }
+
+        string data;
+        bool isEmpty = true;
+        while (std::getline(in, data)) {
+            cout << data << endl;
+            isEmpty = false;
+        }
+        in.close();
+
+        if (isEmpty) {
+            cout << "Warning: file is empty." << endl;
+        }
+
+        break;
 }

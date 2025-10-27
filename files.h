@@ -7,4 +7,7 @@
 using namespace std;
 
 
+void Zaur();
+
 void read_file();
+

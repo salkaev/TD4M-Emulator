@@ -1,4 +1,5 @@
 #include "Mybitset.h"
+#include<securety_func.h>
 #include <string>
 #include <iostream>
 #include <sstream>

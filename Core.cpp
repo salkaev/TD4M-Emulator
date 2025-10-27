@@ -139,3 +139,63 @@ MyBitset<4> fun(string choce, string data) {
     cout << "Warning: unknown instruction '" << choce << "'. Ignored.\n";
     return Register_A;
 }
+
+
+void Commands_from_the_register(){
+
+    while (true) {
+
+        try {
+            cout << "Zaur,Enter first the command number from the list, then the command code, and then the command payload";
+            cout << "\n\n\n";
+            if (!(cin >> number_posi >> chose_Instruction >> choce)) {
+
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                PrintInvalidChoice();
+                continue;
+            }
+
+            // Проверка позиции
+            if (number_posi < 0 || number_posi >= 16) {
+                cout << "Error: command position out of range (0..15).\n";
+                continue;
+            }
+
+            // Проверка формата chose_Instruction
+            string instr_str = chose_Instruction.to_string();
+            if (!is_binary(instr_str, 4)) {
+                cout << "Error: invalid instruction code format. Use 4-bit binary.\n";
+                continue;
+            }
+
+            auto it = Instruction_Set.find((chose_Instruction));
+            if (it == Instruction_Set.end()) {
+                PrintInvalidChoice();
+                continue;
+            }
+
+
+            if (chose_Instruction.to_string() == "0010" || chose_Instruction.to_string() == "0110") {
+                string zxc = "0000";
+                MyBitset<4> tmp;
+                choce = tmp.from_string(zxc);
+
+            }
+            MyBitset<8> command_and_data = Gluing(chose_Instruction, choce);
+            if (coman.find(number_posi) != coman.end()) {
+                coman.erase(number_posi);
+            }
+
+            coman.insert({ number_posi,command_and_data });
+            break;
+        }
+        catch (...) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            PrintInvalidChoice();
+        }
+    }
+
+       }
+     
