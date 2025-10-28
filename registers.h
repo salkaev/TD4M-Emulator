@@ -12,6 +12,10 @@ extern MyBitset<4> Register_A, Register_B, Output_Port, Input_Port, chose_Instru
 extern vector<vector<MyBitset<8>>> mapa;
 extern map<int, MyBitset<8>> coman;
 
+extern vector<pair<string, MyBitset<4>>> XY;
+
+extern map<string, MyBitset<4>> registers;
+
 // Флаги для установки C_Flag на следующий ход //
 extern bool pendingC_next ;
 extern bool pendingC_clear_after_show ;
@@ -26,3 +30,5 @@ extern string stop;
 
 //Все команды //
 extern map<MyBitset<4>, string, BitsetCompare> Instruction_Set;
+
+extern map<MyBitset<4>, string, BitsetCompare> RAM;
