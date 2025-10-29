@@ -52,6 +52,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Zaur.txt" />
+    <Text Include="Zaur.txt">
+      <Filter>Файлы заголовков</Filter>
+    </Text>
   </ItemGroup>
 </Project>

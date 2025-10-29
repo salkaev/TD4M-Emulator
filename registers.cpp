@@ -68,10 +68,10 @@ B7..B4	B3..B0			Z	C
 24	1000	1011	ST B	RAM(XY) ⇐ B	0	0	нет
 25	1000	1100	MOV X, A	X ⇐ A	0	0	нет   +
 26	1000	1101	MOV Y, A	Y ⇐ A	0	0	нет   +
-27	1000	1110	INC XY	XY ⇐ XY + 1	0	0	нет
+27	1000	1110	INC XY	XY ⇐ XY + 1	0	0	нет   +
 28	1000	1111	JMP XY	PC ⇐ XY	0	0	нет
 29	1001	0000	OUT B	output ⇐ B	0	0	да   +
-30	1001	N	OUT B + N	output ⇐ B + N + +  да
+30	1001	N	OUT B + N	output ⇐ B + N + +  да   +
 31	1010	Im	JZ Im	если Z = 1, то PCL ⇐ Im	0	0	нет 
 32	1011	Im	OUT Im	output ⇐ Im	0	0	да       +
 33	1100	Im	MOV Y, Im	Y ⇐ Im	0	0	нет      +
