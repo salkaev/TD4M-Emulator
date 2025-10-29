@@ -142,60 +142,62 @@ MyBitset<4> fun(string choce, string data) {
     if (choce == "1000") {
 
         if (data == "0000") { //А <= A+B
-            Register_A+= Register_B;
+            Register_A += Register_B;
             return(Register_A);
         }
         if (data == "0001") { //A<= -A Вот это проблема так проблема //
 
-            string numb ="-" + Register_A.to_string();
+            string numb = "-" + Register_A.to_string();
             MyBitset<4> bitset_var(numb);
             Register_A = bitset_var;
 
 
             return (Register_A);
         }
-		//NOT A//
+        //NOT A//
         if (data == "0010") {
-          string   data_2 = Register_A.to_string();
+            string   data_2 = Register_A.to_string();
             for (auto i = 0; i < 4; i++) {
-                if(data[i]=='0'){
-                    data_2[i]='1';
+                if (data[i] == '0') {
+                    data_2[i] = '1';
                 }
-                else{
-                    data_2[i]='0';
-				}
+                else {
+                    data_2[i] = '0';
+                }
 
             }
-			MyBitset<4> bitset_var(data_2);
-            Register_A= bitset_var;
-			return (Register_A);
+            MyBitset<4> bitset_var(data_2);
+            Register_A = bitset_var;
+            return (Register_A);
         }
 
-		//OR A,B//
+        //OR A,B//
         if (data == "0011") {
             string   data_2 = Register_A.to_string();
             string   data_3 = Register_B.to_string();
             string   data_4;
 
-            for (int i = 0; i < 4; ++i) {
-                if (data_2[i] == "1" or data_3[i] == "1") {
-					data_4 += '1';
+            for (auto i = 0; i < 4; ++i) {
+                if (data_2[i] == '1' or data_3[i] == '1') {
+                    data_4 += '1';
                 }
                 else {
-					data_4 += '0';
+                    data_4 += '0';
                 }
             }
 
         }
 
-		//AND A,B//
+
+
+        //AND A,B//
         if (data == "0100") {
             string   data_2 = Register_A.to_string();
             string   data_3 = Register_B.to_string();
             string   data_4;
 
             for (int i = 0; i < 4; ++i) {
-                if (data_2[i] == "1" and data_3[i] == "1") {
+                if (data_2[i] == '1' and data_3[i] == '1') {
                     data_4 += '1';
                 }
                 else {
@@ -205,33 +207,27 @@ MyBitset<4> fun(string choce, string data) {
 
 
         }
-		//XOR A,B//
+        //XOR A,B//
         if (data == "0101") {
             string  data_2 = Register_A.to_string();
             string  data_3 = Register_B.to_string();
             string  data_4;
-            for (int i = 0; i < 4; ++i) {
-
-                if (data_2[i] != data_3[i]) {
-                    data_4[i]=="1"
-
-
-                }
-                else {
-                    data_4 = "0";
-                }
-
-            }
-
-
 
         }
 
-        //SUB A,B //
+
+
+
+
+
+
+     /*   //SUB A,B //
         if (data == "0110") { //А <= A-B //
             Register_A -= Register_B;
             return(Register_A);
         }
+        */
+
 
         // 0111 OUT A //
         if (data == "0111") {
@@ -241,22 +237,25 @@ MyBitset<4> fun(string choce, string data) {
         }
 
 
+
+        /*
         //1000 LD A //
         if (data == "1000") {
-            
-            MyBitset<8> xy = MyBitset<8> Gluing( x, y);
 
-  
-            
+            MyBitset<8> xy =  Gluing(XY[0].second, XY[1].second);
 
-        }
+
+
+
+        }*/
+
 
 
 
 
 
         //1100 MOV X,A//
-        if (data == "1100" ) {
+        if (data == "1100") {
             XY[0].second = Register_A;
 
 
@@ -267,17 +266,18 @@ MyBitset<4> fun(string choce, string data) {
 
         }
 
-        
-        
+
+
     }  //MOV Y IM //
     if (choce == "1100") {
-        XY[1].second = make_bitset4_safe( data);
+        XY[1].second = make_bitset4_safe(data);
 
     } //MOV X IM //
     if (choce == "1101") {
         XY[0].second = make_bitset4_safe(data);
 
     }
+
 
 
     // неизвестная инструкция //
@@ -440,7 +440,7 @@ void processing_for_command() {
             string s = val.to_string();
             // safety: ensure s length is 8
             if (s.size() != 8) {
-                cout << "Error: invalid command encoding at position " << position << ". Skipping.\n";
+                cout << "Zaur,error: invalid command encoding at position " << position << ". Skipping.\n";
                 continue;
             }
             string instruction = s.substr(0, 4);
@@ -467,14 +467,14 @@ void processing_for_command() {
                 if (instr_check == "1111" || (instr_check == "1110" && C_Flag != 1)) {
                     int new_i = -1;
                     if (!bin_to_int_safe(addr_check, new_i)) {
-                        cout << "Warning: invalid jump address '" << addr_check << "'. Ignoring jump.\n";
+                        cout << "Zaur,warning: invalid jump address '" << addr_check << "'. Ignoring jump.\n";
                     }
                     else {
                         if (new_i >= 0 && new_i < (int)sorted_coman.size()) {
                             i = new_i - 1;
                         }
                         else {
-                            cout << "Warning: jump target " << new_i << " out of range. Ignored.\n";
+                            cout << "Zaur,warning: jump target " << new_i << " out of range. Ignored.\n";
                         }
                     }
                 }

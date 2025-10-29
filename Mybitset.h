@@ -22,7 +22,7 @@ public:
     MyBitset() : bits(0)
     {
     }
-    MyBitset(const std::string& str) : bits(str)
+    MyBitset(const std::string& str) : bits(0)
     {
     }
     MyBitset(unsigned long long value) : bits(value)

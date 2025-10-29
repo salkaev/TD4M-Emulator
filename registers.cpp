@@ -81,7 +81,7 @@ B7..B4	B3..B0			Z	C
 */
 
 //Все команды //
-map<string, MyBitset<4>,  BitsetCompare> Instruction_Set = {
+map< MyBitset<4>,  string,   BitsetCompare> Instruction_Set = {
     {MyBitset<4>("0000"), "ADD A,Im"},
     {MyBitset<4>("0101"), "ADD B,Im"},
     {MyBitset<4>("0011"), "MOV A,Im"},
@@ -94,6 +94,7 @@ map<string, MyBitset<4>,  BitsetCompare> Instruction_Set = {
     {MyBitset<4>("0110"), "IN B"},
     {MyBitset<4>("1001"), "OUT B"},
     {MyBitset<4>("1011"), "OUT Im"},
+    {MyBitset<4>("1000"), "Other_comand"}
 
 };
  
