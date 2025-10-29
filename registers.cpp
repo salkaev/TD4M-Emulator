@@ -62,9 +62,9 @@ B7..B4	B3..B0			Z	C
 18	1000	0101	XOR A, B	A ⇐ A xor B + 0	нет   +
 19	1000	0110	SUB A, B	A ⇐ A - B + +нет      +
 20	1000	0111	OUT A	output ⇐ A	0	0	нет   +
-21	1000	1000	LD A	A ⇐ RAM(XY)	0	0	нет
+21	1000	1000	LD A	A ⇐ RAM(XY)	0	0	нет   +
 22	1000	1001	ST A	RAM(XY) ⇐ A	0	0	нет
-23	1000	1010	LD B	B ⇐ RAM(XY)	0	0	нет
+23	1000	1010	LD B	B ⇐ RAM(XY)	0	0	нет   +
 24	1000	1011	ST B	RAM(XY) ⇐ B	0	0	нет
 25	1000	1100	MOV X, A	X ⇐ A	0	0	нет   +
 26	1000	1101	MOV Y, A	Y ⇐ A	0	0	нет   +
@@ -100,8 +100,7 @@ map< MyBitset<4>,  string,   BitsetCompare> Instruction_Set = {
  
 
 //Наша чудо RAM память //
-
-std::map<std::string, MyBitset<4>, BitsetCompare> RAM = {
+map<string, MyBitset<4>, BitsetCompare> RAM = {
     { "00h", MyBitset<4>("0000") }, { "01h", MyBitset<4>("0000") }, { "02h", MyBitset<4>("0000") }, { "03h", MyBitset<4>("0000") },
     { "04h", MyBitset<4>("0000") }, { "05h", MyBitset<4>("0000") }, { "06h", MyBitset<4>("0000") }, { "07h", MyBitset<4>("0000") },
     { "08h", MyBitset<4>("0000") }, { "09h", MyBitset<4>("0000") }, { "0Ah", MyBitset<4>("0000") }, { "0Bh", MyBitset<4>("0000") },

@@ -118,7 +118,7 @@ void Zaur() {
         }
 
         // Работа с файлом
-        string file = "C:\\Users\\salka\\source\\repos\\TD4M Emulator\\Zaur.txt";
+        string file = "Zaur.txt";
         ifstream in(file);
         if (!in.is_open()) {
             cout << "Error: cannot open file '" << file << "'." << endl;

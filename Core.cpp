@@ -1,5 +1,5 @@
-#include "Mybitset.h"
 #include "registers.h"
+#include "Mybitset.h"
 #include "securety_func.h"
 #include "Core.h"
 #include <map>
@@ -238,16 +238,39 @@ MyBitset<4> fun(string choce, string data) {
 
 
 
-        /*
+        
         //1000 LD A //
         if (data == "1000") {
-
             MyBitset<8> xy =  Gluing(XY[0].second, XY[1].second);
+            string numb_2 = xy.to_string();
+            std::stringstream ss;
+            ss << std::hex << std::uppercase << numb_2;
+            string hex_numv = ss.str();
+            hex_numv += 'h';
+            
+            auto pair = RAM.find(hex_numv);
+			MyBitset<4> bin_numb = pair->second;
+
+            Register_A = bin_numb;
+
+        }
 
 
+        //1010 LD A //
+        if (data == "1010") {
+            MyBitset<8> xy = Gluing(XY[0].second, XY[1].second);
+            string numb_2 = xy.to_string();
+            std::stringstream ss;
+            ss << std::hex << std::uppercase << numb_2;
+            string hex_numv = ss.str();
+            hex_numv += 'h';
 
+            auto pair = RAM.find(hex_numv);
+            MyBitset<4> bin_numb = pair->second;
 
-        }*/
+            Register_B = bin_numb;
+
+        }
 
 
 

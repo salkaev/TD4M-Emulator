@@ -137,6 +137,9 @@
     <ClInclude Include="registers.h" />
     <ClInclude Include="securety_func.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Zaur.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

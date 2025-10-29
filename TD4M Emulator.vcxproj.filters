@@ -30,6 +30,9 @@
     <ClCompile Include="registers.cpp">
       <Filter>Файлы заголовков</Filter>
     </ClCompile>
+    <ClCompile Include="other_func.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="files.h">
@@ -47,5 +50,8 @@
     <ClInclude Include="Core.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Zaur.txt" />
   </ItemGroup>
 </Project>

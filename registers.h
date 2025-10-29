@@ -31,4 +31,4 @@ extern string stop;
 //Все команды //
 extern map<MyBitset<4>, string,BitsetCompare> Instruction_Set;
 
-extern map<MyBitset<4>, string, BitsetCompare> RAM;
+extern map<string, MyBitset<4>, BitsetCompare> RAM;

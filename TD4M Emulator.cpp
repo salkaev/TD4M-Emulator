@@ -1,21 +1,9 @@
 ﻿#define NOMINMAX
 #include <iostream>
 #include <map>
-#include <vector>
-#include <unordered_map>
-#include <locale>
-#include <clocale>
-#include <windows.h>
-#include <algorithm>
-#include <bitset>
 #include <cstdlib>
-#include <iomanip>
-#include <chrono>
-#include <thread>
 #include <sstream>
 #include <limits>
-#include <fstream>
-#include <cctype>
 #include"registers.h"
 #include"Mybitset.h"
 #include"securety_func.h"
