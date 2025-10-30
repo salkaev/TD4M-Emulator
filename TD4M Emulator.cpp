@@ -37,6 +37,9 @@ string graffiti =
 
 
 int main() {
+
+    MyBitset<4>zxc = 0001;
+    cout << (zxc * ( - 1));
     for (int i = 0; i < 16; i++) {
         coman[i] = MyBitset<8>(); // Создаем пустую карту //
     }

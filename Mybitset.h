@@ -19,13 +19,13 @@ private:
 
 public:
     // Конструкторы//
-    MyBitset() : bits(0)
+    MyBitset() : bits()
     {
     }
-    MyBitset(const std::string& str) : bits(0)
+    MyBitset(const std::string& str) : bits()
     {
     }
-    MyBitset(unsigned long long value) : bits(value)
+    MyBitset( long long value) : bits(value)
     {
     }
 
@@ -53,18 +53,18 @@ public:
 
     // Арифметика: сложение//
     MyBitset operator+(const MyBitset& other) const {
-        unsigned long long result = this->to_ullong() + other.to_ullong();
+        long long result = this->to_ullong() + other.to_ullong();
         return MyBitset(result);
     }
 
     // Арифметика: вычитание//
     MyBitset operator-(const MyBitset& other) const {
-        unsigned long long result = this->to_ullong() - other.to_ullong();
+         long long result = this->to_ullong() - other.to_ullong();
         return MyBitset(result);
     }
 
     // Получить число//
-    unsigned long long to_ullong() const {
+    long long to_ullong() const {
         return bits.to_ullong();
     }
 
@@ -99,15 +99,23 @@ public:
     }
     // Оператор += //
     MyBitset& operator+=(const MyBitset& other) {
-        unsigned long long result = this->to_ullong() + other.to_ullong();
+        long long result = this->to_ullong() + other.to_ullong();
         bits = std::bitset<N>(result);
         return *this;
     }
 
+    // Оператор * //
+    MyBitset& operator*(const MyBitset& other) {
+        long long result = this->to_ullong() * other.to_ullong();
+        bits = std::bitset<N>(result);
+        return *this;
+    }
+
+
     friend std::istream& operator>>(std::istream& is, MyBitset& b) {
         std::string str;
         is >> str;
-        b = MyBitset(str);
+        b.bits = bitset<N>(str);
         return is;
     }
 

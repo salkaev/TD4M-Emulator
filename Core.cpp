@@ -232,6 +232,14 @@ if (choce == "1100") {
 
 
 
+         //NEG A //
+
+         if (data == "0001") {
+             MyBitset<4> new1 = (Register_A) * (-1);
+             cout << new1;
+                 
+
+         }
 
 
          /*   //SUB A,B //
@@ -324,12 +332,16 @@ void Commands_from_the_register(){
             cout << "Zaur,Enter first the command number from the list, then the command code, and then the command payload";
             cout << "\n\n\n";
             if (!(cin >> number_posi >> chose_Instruction >> choce)) {
+               
 
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 PrintInvalidChoice();
                 continue;
             }
+            std::cout << "DEBUG: Adding command at position " << number_posi << std::endl;
+            std::cout << "DEBUG: Opcode: " << chose_Instruction << ", Data: ";
+            std::cout << "DEBUG: Full command: " << choce << std::endl;
 
             // Проверка позиции
             if (number_posi < 0 || number_posi >= 16) {
@@ -361,7 +373,10 @@ void Commands_from_the_register(){
             if (coman.find(number_posi) != coman.end()) {
                 coman.erase(number_posi);
             }
-
+            std::cout << "DEBUG: Adding command at position " << number_posi << std::endl;
+            std::cout << "DEBUG: Opcode: " << chose_Instruction << ", Data: ";
+            std::cout << "DEBUG: Full command: " << choce << std::endl;
+            std::cout << command_and_data;
             coman.insert({ number_posi,command_and_data });
             break;
         }
