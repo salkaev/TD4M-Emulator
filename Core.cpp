@@ -276,6 +276,14 @@ if (choce == "1100") {
 
          }
 
+         // ST A 1001 //
+         if (data == "1001") 
+		 {
+			 XY[0].second = Register_A;
+
+
+             }
+
 
          //1010 LD B //
          if (data == "1010") {
