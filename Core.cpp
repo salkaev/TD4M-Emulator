@@ -191,7 +191,7 @@ if (choce == "1100") {
              string   data_4;
 
              for (auto i = 0; i < 4; ++i) {
-                 if (data_2[i] == '1' or data_3[i] == '1') {
+                 if ((data_2[i] == '1') or (data_3[i] == '1')) {
                      data_4 += '1';
                  }
                  else {
@@ -210,7 +210,7 @@ if (choce == "1100") {
              string   data_4;
 
              for (int i = 0; i < 4; ++i) {
-                 if (data_2[i] == '1' and data_3[i] == '1') {
+                 if ((data_2[i] == '1') and (data_3[i] == '1')) {
                      data_4 += '1';
                  }
                  else {
@@ -242,12 +242,12 @@ if (choce == "1100") {
          }
 
 
-         /*   //SUB A,B //
+          //SUB A,B //
             if (data == "0110") { //À <= A-B //
-                Register_A -= Register_B;
+                Register_A = Register_A- Register_B;
                 return(Register_A);
             }
-            */
+            
 
 
             // 0111 OUT A //

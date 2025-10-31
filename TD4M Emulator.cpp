@@ -45,7 +45,47 @@ int main() {
     }
     cout << graffiti;
     cout << "\n\n\n\n\n";
-    cout << "Instruction_Set\n" << "ADD A,Im 0000,\nADD B,Im 0101,\nMOV A,Im 0011,\nMOV B,Im 0111,\nMOV A,B 0001\nMOV B,A 0100\nJMP Im 1111\nJNC Im 1110\nIN A 0010\nIN B 0110\nOUT B 1001\nOUT Im 1011";
+    cout << "Instruction_Set\n"
+        << "Краткое описание\n"
+        << "Влияние на флаги\tTD4\n"
+        << "B7..B4\tB3..B0\t\tZ\tC\n\n"
+
+        << "1\t0000\tIm\tADD A, Im\tA <= A + Im\t+\n\n"
+        << "2\t0001\t0000\tMOV A, B\tA <= B\t0\t0\tда\t+\n\n"
+        << "3\t0001\tN\tADD A, B, N\tA <= B + N\t+\n\n"
+        << "4\t0010\t0000\tIN A\tA <= input\t0\t0\tда\t+\n\n"
+        << "5\t0010\tN\tIN A + N\tA <= input + N\t+\n\n"
+        << "6\t0011\tIm\tMOV A, Im\tA <= Im\t0\t0\tда\t+\n\n"
+        << "7\t0100\t0000\tMOV B, A\tB <= A\t0\t0\tда\t+\n\n"
+        << "8\t0100\tN\tADD B, A, N\tB <= A + N\t+\n\n"
+        << "9\t0101\tIm\tADD B, Im\tB <= B + Im\t+\n\n"
+        << "10\t0110\t0000\tIN B\tB <= input\t0\t0\tда\t+\n\n"
+        << "11\t0110\tN\tIN B + N\tB <= input + N\t+\n\n"
+        << "12\t0111\tIm\tMOV B, Im\tB <= Im\t0\t0\tда\t+\n\n"
+        << "13\t1000\t0000\tADD A, B\tA <= A + B\t\n\n"
+        << "14\t1000\t0001\tNEG A\tA <= -A\t\n\n"
+        << "15\t1000\t0010\tNOT A\tA <= not A\t0\t+\n\n"
+        << "16\t1000\t0011\tOR A, B\tA <= A or B\t0\t+\n\n"
+        << "17\t1000\t0100\tAND A, B\tA <= A and B\t0\t+\n\n"
+        << "18\t1000\t0101\tXOR A, B\tA <= A xor B\t0\t+\n\n"
+        << "19\t1000\t0110\tSUB A, B\tA <= A - B\t\n\n"
+        << "20\t1000\t0111\tOUT A\toutput <= A\t0\t0\tнет\t\n\n"
+        << "21\t1000\t1000\tLD A\tA <= RAM(XY)\t0\t0\tнет\t\n\n"
+        << "22\t1000\t1001\tST A\tRAM(XY) <= A\t0\t0\tнет\t\n\n"
+        << "23\t1000\t1010\tLD B\tB <= RAM(XY)\t0\t0\tнет\t\n\n"
+        << "24\t1000\t1011\tST B\tRAM(XY) <= B\t0\t0\tнет\t\n\n"
+        << "25\t1000\t1100\tMOV X, A\tX <= A\t0\t0\tнет\t\n\n"
+        << "26\t1000\t1101\tMOV Y, A\tY <= A\t0\t0\tнет\t\n\n"
+        << "27\t1000\t1110\tINC XY\tXY <= XY + 1\t0\t0\tнет\t\n\n"
+        << "28\t1000\t1111\tJMP XY\tPC <= XY\t0\t0\tнет\t\n\n"
+        << "29\t1001\t0000\tOUT B\toutput <= B\t0\t0\tда\t\n\n"
+        << "30\t1001\tN\tOUT B + N\toutput <= B + N\t+\n\n"
+        << "31\t1010\tIm\tJZ Im\tif Z==1 then PCL <= Im\t\n\n"
+        << "32\t1011\tIm\tOUT Im\toutput <= Im\t0\t0\tда\t\n\n"
+        << "33\t1100\tIm\tMOV Y, Im\tY <= Im\t0\t0\tнет\t\n\n"
+        << "34\t1101\tIm\tMOV X, Im\tX <= Im\t0\t0\tнет\t\n\n"
+        << "35\t1110\tIm\tJNC Im\tif C==0 then PCL <= Im\t\n\n"
+        << "36\t1111\tIm\tJMP Im\tPCL <= Im\t\n";
 
     while (true) {
         cout << "\n\n\n";
