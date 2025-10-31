@@ -45,7 +45,9 @@ MyBitset<8> Gluing(MyBitset<4> v1, MyBitset<4> v2) {
     string s1 = v1.to_string();
     string s2 = v2.to_string();
     string s3 = s1 + s2;
+    cout<<"\n" << s3;
     MyBitset<8> final(s3);
+    cout << "\n" <<final;
     return final;
 }
 

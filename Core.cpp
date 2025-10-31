@@ -369,7 +369,9 @@ void Commands_from_the_register(){
                 choce = tmp.from_string(zxc);
 
             }
-            MyBitset<8> command_and_data = Gluing(chose_Instruction, choce);
+            MyBitset<8> command_and_data = { 0 };
+            cout << "command_and_data" << command_and_data;
+            command_and_data = Gluing(chose_Instruction, choce);
             if (coman.find(number_posi) != coman.end()) {
                 coman.erase(number_posi);
             }
