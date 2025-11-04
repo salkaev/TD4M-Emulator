@@ -10,10 +10,10 @@
 #include <chrono>
 #include <thread> 
 
-// Функция обработки функционала команд -- сигнатура точно совпадает с Core.h
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ Core.h
 MyBitset<4> fun(string choce, string data) {
 
-    // Валидация входных строк для предотвращения некорректных конструкций
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     if (!is_binary(choce, 4)) {
         cout << "Error: invalid instruction code '" << choce << "'. Ignoring.\n";
         return Register_A;
@@ -71,7 +71,7 @@ MyBitset<4> fun(string choce, string data) {
             Register_A = Register_B;
         }
         else {
-            // если payload — immediate, применим как замещение
+            // пїЅпїЅпїЅпїЅ payload пїЅ immediate, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             Register_A = make_bitset4_safe(data);
         }
         return Register_A;
@@ -89,7 +89,7 @@ MyBitset<4> fun(string choce, string data) {
         return Register_B;
     }
 
-    // 1111 JMP Im (безусловный) //
+    // 1111 JMP Im (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) //
     if (choce == "1111") {
         if (!is_binary(data, 4)) {
             cout << "Error: invalid JMP address '" << data << "'. Ignoring jump.\n";
@@ -151,21 +151,12 @@ if (choce == "1100") {
      }
 
 
-    // Команды где B7-B4 == 1000 //
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ B7-B4 == 1000 //
      if (choce == "1000") {
 
-         if (data == "0000") { //А <= A+B
+         if (data == "0000") { //пїЅ <= A+B
              Register_A += Register_B;
              return(Register_A);
-         }
-         if (data == "0001") { //A<= -A Вот это проблема так проблема //
-
-             string numb = "-" + Register_A.to_string();
-             MyBitset<4> bitset_var(numb);
-             Register_A = bitset_var;
-
-
-             return (Register_A);
          }
          //NOT A//
          if (data == "0010") {
@@ -235,15 +226,27 @@ if (choce == "1100") {
          //NEG A //
 
          if (data == "0001") {
-             MyBitset<4> new1 = (Register_A) * (-1);
-             cout << new1;
-                 
+            MyBitset<4>one=1 ;
+            string   data_1 = Register_A.to_string();
+            string   data_2; 
+             for (int i=0   ; i <4  ;  ++i){
+                if (data_1[i]=='0'){
+                    data_2+='1';
+                }
+                else{
+                    data_2+='0';
+
+                }
+
+             }
+             Register_A=MyBitset<4>(data_2)+one;
+              return(Register_A);
 
          }
 
 
           //SUB A,B //
-            if (data == "0110") { //А <= A-B //
+            if (data == "0110") { //пїЅ <= A-B //
                 Register_A = Register_A- Register_B;
                 return(Register_A);
             }
@@ -326,7 +329,7 @@ if (choce == "1100") {
 
 
 
-    // неизвестная инструкция //
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ //
     cout << "Warning: unknown instruction '" << choce << "'. Ignored.\n";
     return Register_A;
 }
@@ -351,13 +354,13 @@ void Commands_from_the_register(){
             std::cout << "DEBUG: Opcode: " << chose_Instruction << ", Data: ";
             std::cout << "DEBUG: Full command: " << choce << std::endl;
 
-            // Проверка позиции
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (number_posi < 0 || number_posi >= 16) {
                 cout << "Error: command position out of range (0..15).\n";
                 continue;
             }
 
-            // Проверка формата chose_Instruction
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ chose_Instruction
             string instr_str = chose_Instruction.to_string();
             if (!is_binary(instr_str, 4)) {
                 cout << "Error: invalid instruction code format. Use 4-bit binary.\n";
@@ -400,7 +403,7 @@ void Commands_from_the_register(){
        }
 
 
-//Обработка введённых команд из нашей таблицы //
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ //
 
 void processing_for_command() {
 
@@ -486,9 +489,9 @@ void processing_for_command() {
             cout << "| PC: " << setw(8) << Program_Counter << "| Out: " << setw(7) << Output_Port << "|" << "Input:" << Input_Port << "|\n";
             cout << "+-------------+-----------------------+\n";
 
-            // <<== Изменение: после вывода (печати) порта Output_Port
-            // очищаем его, чтобы значение, установленное инструкцией OUT,
-            // отображалось только один шаг, а затем показывалось 0000.
+            // <<== пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅпїЅпїЅпїЅ Output_Port
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ OUT,
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 0000.
             Output_Port = MyBitset<4>(0);
 
             Program_Counter += 0001;
@@ -501,7 +504,7 @@ void processing_for_command() {
             string instruction = s.substr(0, 4);
             string payload = s.substr(4, 4);
 
-            // Вызов fun в try/catch — защита от неожиданных исключений //
+            // пїЅпїЅпїЅпїЅпїЅ fun пїЅ try/catch пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ //
             try {
                 fun(instruction, payload);
             }
@@ -514,8 +517,8 @@ void processing_for_command() {
                 continue;
             }
 
-            // Обработка перехода после выполнения инструкции, //
-            // чтобы сначала был показан и выполнен шаг, а затем выполнен jump//
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, //
+            // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ jump//
             {
                 string instr_check = instruction;
                 string addr_check = payload;
