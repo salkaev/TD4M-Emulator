@@ -151,79 +151,16 @@ if (choce == "1100") {
      }
 
 
-    // ������� ��� B7-B4 == 1000 //
+    //  B7-B4 == 1000 //
      if (choce == "1000") {
 
+        //0000//
          if (data == "0000") { //� <= A+B
              Register_A += Register_B;
              return(Register_A);
          }
-         //NOT A//
-         if (data == "0010") {
-             string   data_2 = Register_A.to_string();
-             for (auto i = 0; i < 4; i++) {
-                 if (data[i] == '0') {
-                     data_2[i] = '1';
-                 }
-                 else {
-                     data_2[i] = '0';
-                 }
 
-             }
-             MyBitset<4> bitset_var(data_2);
-             Register_A = bitset_var;
-             return (Register_A);
-         }
-
-         //OR A,B//
-         if (data == "0011") {
-             string   data_2 = Register_A.to_string();
-             string   data_3 = Register_B.to_string();
-             string   data_4;
-
-             for (auto i = 0; i < 4; ++i) {
-                 if ((data_2[i] == '1') or (data_3[i] == '1')) {
-                     data_4 += '1';
-                 }
-                 else {
-                     data_4 += '0';
-                 }
-             }
-
-         }
-
-
-
-         //AND A,B//
-         if (data == "0100") {
-             string   data_2 = Register_A.to_string();
-             string   data_3 = Register_B.to_string();
-             string   data_4;
-
-             for (int i = 0; i < 4; ++i) {
-                 if ((data_2[i] == '1') and (data_3[i] == '1')) {
-                     data_4 += '1';
-                 }
-                 else {
-                     data_4 += '0';
-                 }
-             }
-
-
-         }
-         //XOR A,B//
-         if (data == "0101") {
-             string  data_2 = Register_A.to_string();
-             string  data_3 = Register_B.to_string();
-             string  data_4;
-
-         }
-
-
-
-
-
-         //NEG A //
+          //0001 NEG A //
 
          if (data == "0001") {
             MyBitset<4>one=1 ;
@@ -243,10 +180,76 @@ if (choce == "1100") {
               return(Register_A);
 
          }
+         //0010 NOT A//
+         if (data == "0010") {
+             string   data_2 = Register_A.to_string();
+             for (auto i = 0; i < 4; i++) {
+                 if (data[i] == '0') {
+                     data_2[i] = '1';
+                 }
+                 else {
+                     data_2[i] = '0';
+                 }
+
+             }
+             MyBitset<4> bitset_var(data_2);
+             Register_A = bitset_var;
+             return (Register_A);
+         }
+
+         //0011 OR A,B//
+         if (data == "0011") {
+             string   data_2 = Register_A.to_string();
+             string   data_3 = Register_B.to_string();
+             string   data_4;
+
+             for (auto i = 0; i < 4; ++i) {
+                 if ((data_2[i] == '1') or (data_3[i] == '1')) {
+                     data_4 += '1';
+                 }
+                 else {
+                     data_4 += '0';
+                 }
+             }
+
+         }
 
 
-          //SUB A,B //
-            if (data == "0110") { //� <= A-B //
+
+         //0100 AND A,B//
+         if (data == "0100") {
+             string   data_2 = Register_A.to_string();
+             string   data_3 = Register_B.to_string();
+             string   data_4;
+
+             for (int i = 0; i < 4; ++i) {
+                 if ((data_2[i] == '1') and (data_3[i] == '1')) {
+                     data_4 += '1';
+                 }
+                 else {
+                     data_4 += '0';
+                 }
+             }
+
+
+         }
+         //0101 XOR A,B//
+         if (data == "0101") {
+             string  data_2 = Register_A.to_string();
+             string  data_3 = Register_B.to_string();
+             string  data_4;
+
+         }
+
+
+
+
+
+        
+
+
+          //0110 SUB A,B //
+            if (data == "0110") { //A<= A-B //
                 Register_A = Register_A- Register_B;
                 return(Register_A);
             }
@@ -263,7 +266,7 @@ if (choce == "1100") {
 
 
 
-         //1000 LD A //
+         // 1000 LD A //
          if (data == "1000") {
              MyBitset<8> xy = Gluing(XY[0].second, XY[1].second);
              string numb_2 = xy.to_string();
@@ -311,7 +314,7 @@ if (choce == "1100") {
 
          }
          //1101 MOV Y,A//
-         if (data == "1100") {
+         if (data == "1101") {
              XY[1].second = Register_A;
 
          }
@@ -321,10 +324,31 @@ if (choce == "1100") {
 
    
 
-    //  LNC XY //
+    //  1110 INC XY //
      if (data == "1110") {
          MyBitset<4>one = 0001;
          XY[0].second = XY[1].second + one;
+    }
+    // 1111 JMP XY //
+    if (data == "1111") {
+        if (!is_binary(data, 4)) {
+            cout << "Error: invalid JMP address '" << data << "'. Ignoring jump.\n";
+            return Register_A;
+        }
+
+         MyBitset<8> xy = Gluing(XY[0].second, XY[1].second);
+             string numb_2 = xy.to_string();
+             std::stringstream ss;
+             ss << std::hex << std::uppercase << numb_2;
+             string hex_numv = ss.str();
+             hex_numv += 'h';
+
+             auto pair = RAM.find(hex_numv);
+             MyBitset<4> bin_numb = pair->second;
+
+             Program_Counter = bin_numb;
+
+        return Program_Counter;
     }
 
 
