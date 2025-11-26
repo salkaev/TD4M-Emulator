@@ -117,7 +117,7 @@ int main() {
 
         {
             chose_input();
-            break;
+             continue;
         }
         if (comand == 4) {
             cout << "Zaur,See you soon!";

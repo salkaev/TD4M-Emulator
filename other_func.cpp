@@ -6,21 +6,24 @@
 #include <algorithm>
 using namespace std;
 
-void  chose_input() {
-    cout << "Zaur,choice value input_port";
-    while (ok != 1) {
+void chose_input() {
+    cout << "Zaur,choice value input_port: ";
+    
+    MyBitset<4> a;
+    bool input_ok = false;
+    
+    while (!input_ok) {
         if (!(cin >> a)) {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             PrintInvalidChoice();
-            continue;
+            cout << "Please enter a valid value (0-15): ";
         }
         else {
             Input_Port = a;
-            ok = 1;
+            input_ok = true;
+            cout << "Input port set to: " << Input_Port << endl;
         }
-
-
     }
 }
 
