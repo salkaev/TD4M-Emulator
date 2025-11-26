@@ -268,10 +268,18 @@ MyBitset<4> fun(string choce, string data) {
         }
 
         // 1001 ST A //
-        if (data == "1001") {
-            XY[0].second = Register_A;
-            return Register_A;
-        }
+if (data == "1001") {
+    MyBitset<8> xy = Gluing(XY[0].second, XY[1].second);
+    string numb_2 = xy.to_string();
+    std::stringstream ss;
+    ss << std::hex << std::uppercase << numb_2;
+    string hex_numv = ss.str();
+    hex_numv += 'h';
+    
+    // Сохраняем Register_A в RAM по адресу XY
+    RAM[hex_numv] = Register_A;
+    return Register_A;
+}
 
         // 1010 LD B //
         if (data == "1010") {
