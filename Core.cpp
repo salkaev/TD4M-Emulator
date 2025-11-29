@@ -9,6 +9,7 @@
 #include<iomanip>
 #include <chrono>
 #include <thread> 
+MyBitset<4> bin_numb=0;
 MyBitset<4> fun(string choce, string data) {
 
     // Проверка корректности бинарных данных
@@ -262,7 +263,7 @@ MyBitset<4> fun(string choce, string data) {
             string hex_numv = ss.str();
             hex_numv += 'h';
             auto pair = RAM.find(hex_numv);
-            MyBitset<4> bin_numb = pair->second;
+             bin_numb = pair->second;
             Register_A = bin_numb;
             return Register_A;
         }
@@ -278,6 +279,7 @@ if (data == "1001") {
     
     // Сохраняем Register_A в RAM по адресу XY
     RAM[hex_numv] = Register_A;
+     bin_numb=Register_A;
     return Register_A;
 }
 
@@ -485,10 +487,10 @@ void processing_for_command() {
             }
 
             cout << "|---------------Register--------------|\n";
-            cout << "+-------------+-------------+---------+\n";
-            cout << "| Register A  | Register B  | C Flag  |\n";
-            cout << "+-------------+-------------+---------+\n";
-            cout << "| " << setw(11) << Register_A << " | " << setw(11) << Register_B << " | " << setw(7) << C_Flag << " |\n";
+            cout << "+-------------+-------------+---------+------------\n";
+            cout << "| Register A  | Register B  | C Flag  | Register XY | \n";
+            cout << "+-------------+-------------+---------+-------------+\n";
+            cout << "| " << setw(11) << Register_A << " | " << setw(11) << Register_B << " | " << setw(7) << C_Flag<<" |" <<bin_numb  <<" |\n";
             cout << "+-------------+-------------+---------+\n";
             cout << "| PC: " << setw(8) << Program_Counter << "| Out: " << setw(7) << Output_Port << "|" << "Input:" << Input_Port << "|\n";
             cout << "+-------------+-----------------------+\n";
