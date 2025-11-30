@@ -86,7 +86,7 @@ int main() {
 
     while (true) {
         cout << "\n\n\n";
-        cout << "Zaur,Choose action 1: Clear field 2: Disassembly 3: Add command or remove command 4: leave this program and say bye  5: print full map code 6: choice numb input_port 7: start program 8: Zaur (new version !!! )  9: read file";
+        cout << "Zaur,Choose action 1: Clear field 2: Disassembly 3: Add command or remove command 4: leave this program and say bye  5: print full map code 6: choice numb input_port 7: start program 8: Zaur (new version !!! )  9: read file 10:  ready mame programs";
         cout << "\n\n\n";
 
         while (true) {
@@ -94,10 +94,10 @@ int main() {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 PrintInvalidChoice();
-                cout << "Zaur,Choose action 1: Clear field 2: Disassembly 3: Add command or remove command 4: leave this program and say bye  5: print full map code 6: choice numb input_port 7: start program 8: Zaur  9: read file" << endl;
+                cout << "Zaur,Choose action 1: Clear field 2: Disassembly 3: Add command or remove command 4: leave this program and say bye  5: print full map code 6: choice numb input_port 7: start program 8: Zaur  9: read file 10:  ready mame programs" ;
                 continue;
             }
-            if (comand < 1 || comand > 9) {
+            if (comand < 1 || comand > 10) {
                 PrintInvalidChoice();
                 continue;
             }
@@ -140,6 +140,9 @@ int main() {
         }
         if (comand == 7){
             processing_for_command();
+        }
+        if (comand==10){
+            starter_pack();
         }
 
     }

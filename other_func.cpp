@@ -4,6 +4,7 @@
 #include <iostream>
 #include <limits>
 #include <algorithm>
+#include "Core.h"
 using namespace std;
 
 void chose_input() {
@@ -26,6 +27,38 @@ void chose_input() {
         }
     }
 }
+
+void starter_pack() {
+    cout << "Zaur, please choice a programs";
+    cout << "Zaur, 3 programs = 3 in the task sheet and so on ";
+    int choice = 0;
+    cin >> choice;
+    
+
+
+    if (choice == 3) {
+        coman[0] = "00110010";  
+        coman[1] = "00011000";  
+        coman[3] = "10101000"; 
+        coman[4] = "00110010"; 
+        coman[5] = "00001000";  
+        coman[6] = "01010000"; 
+        coman[7] = "01111000"; 
+    }
+
+    else if (choice == 4) {
+        coman[0] = "01000011";
+        coman[1] = "10001011";
+        coman[2] = "10001010";
+        coman[3] = "00100011";
+        coman[4] = "10000010";
+        coman[5] = "10000000";
+        coman[6] = "00000100";
+        coman[7] = "10000111";
+    }
+    
+}
+
 
 void  Empty() {
     if (coman.empty()) {
