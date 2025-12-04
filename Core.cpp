@@ -10,6 +10,7 @@
 #include <chrono>
 #include <thread> 
 #include <sstream>
+MyBitset<4>bin_meaning;
 // Вспомогательная функция для обновления 8-битного XY из X и Y
 void update_XY_from_parts() {
     // Собираем X (старшие 4 бита) и Y (младшие 4 бита) в 8-битное значение
@@ -390,6 +391,7 @@ MyBitset<4> fun(string choce, string data) {
             if (pair != RAM.end()) {
                 Register_A = pair->second;
             }
+            bin_meaning=Register_A; 
             Z_Flag = 0; // 0
             C_Flag = 0; // 0
             return Register_A;
@@ -405,6 +407,7 @@ MyBitset<4> fun(string choce, string data) {
             hex_addr += 'h';
             
             RAM[hex_addr] = Register_A;
+            bin_meaning=Register_A; 
             Z_Flag = 0; // 0
             C_Flag = 0; // 0
             return Register_A;
@@ -423,6 +426,7 @@ MyBitset<4> fun(string choce, string data) {
             if (pair != RAM.end()) {
                 Register_B = pair->second;
             }
+            bin_meaning=Register_B;
             Z_Flag = 0; // 0
             C_Flag = 0; // 0
             return Register_A;
@@ -440,6 +444,7 @@ MyBitset<4> fun(string choce, string data) {
             RAM[hex_addr] = Register_B;
             Z_Flag = 0; // 0
             C_Flag = 0; // 0
+            bin_meaning=Register_B;
             return Register_B;
         }
 
@@ -541,12 +546,12 @@ void processing_for_command() {
 
             // ОБНОВЛЕННЫЙ ВЫВОД С ПРАВИЛЬНЫМИ ФЛАГАМИ
             cout << "|---------------Register--------------|\n";
-            cout << "+-------------+-------------+---------+---------+------------\n";
-            cout << "| Register A  | Register B  | Z Flag  | C Flag  | Register XY | \n";
-            cout << "+-------------+-------------+---------+---------+------------\n";
+            cout << "+-------------+-------------+---------+---------+------------+------------\n";
+            cout << "| Register A  | Register B  | Z Flag  | C Flag  | Register XY | [Register XY]\n";
+            cout << "+-------------+-------------+---------+---------+------------+------------\n";
             cout << "| " << setw(11) << Register_A << " | " << setw(11) << Register_B 
                  << " | " << setw(7) << Z_Flag << " | " << setw(7) << C_Flag 
-                 << " | " << setw(10) << bin_numb << " |\n";
+                 << " | " << setw(10) << bin_numb << " | " <<bin_meaning << " |\n";
             cout << "+-------------+-------------+---------+---------+------------\n";
             cout << "| PC: " << setw(8) << Program_Counter 
                  << " | Out: " << setw(7) << Output_Port 
