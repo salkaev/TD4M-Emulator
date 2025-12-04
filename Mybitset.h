@@ -10,14 +10,14 @@
 
 using namespace std;
 
-//Класс который будет эмулировать двоичный код//
+//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ//
 template <size_t N>
 class MyBitset {
 private:
     int numb_posi;
     std::bitset<N> bits;
 
-    // Вспомогательные методы для разбора строк
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     static void trim_inplace(std::string& s) {
         auto notspace = [](int ch) { return !std::isspace(ch); };
         s.erase(s.begin(), std::find_if(s.begin(), s.end(), notspace));
@@ -42,7 +42,7 @@ private:
         return val;
     }
 
-    // Унифицированная логика инициализации из строки
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     void init_from_string(const std::string& raw) {
         std::string s = raw;
         trim_inplace(s);
@@ -67,7 +67,7 @@ private:
     }
 
 public:
-    // Конструкторы//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ//
     MyBitset() : bits(0) {}
 
     MyBitset(const std::string& str) {
@@ -76,57 +76,57 @@ public:
 
     MyBitset(unsigned long long value) : bits(value) {}
 
-    // Оператор присваивания из строки//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ//
     MyBitset& operator=(const std::string& str) {
         init_from_string(str);
         return *this;
     }
 
-    // Оператор [] для доступа к отдельным битам//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ [] пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ//
     bool operator[](size_t pos) const {
         return bits[pos];
     }
 
-    // Оператор присваивания из числа//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ//
     MyBitset& operator=(unsigned long long value) {
         bits = std::bitset<N>(value);
         return *this;
     }
 
-    // Оператор присваивания из другого MyBitset//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ MyBitset//
     MyBitset& operator=(const MyBitset& other) {
         bits = other.bits;
         return *this;
     }
 
-    // Арифметика: сложение//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ//
     MyBitset operator+(const MyBitset& other) const {
         unsigned long long result = this->to_ullong() + other.to_ullong();
         return MyBitset(result);
     }
 
-    // Арифметика: вычитание//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ//
     MyBitset operator-(const MyBitset& other) const {
         unsigned long long result = this->to_ullong() - other.to_ullong();
         return MyBitset(result);
     }
 
-    // Получить число//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ//
     unsigned long long to_ullong() const {
         return bits.to_ullong();
     }
 
-    // Получить строку//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ//
     std::string to_string() const {
         return bits.to_string();
     }
 
-    // Вывод//
+    // пїЅпїЅпїЅпїЅпїЅ//
     void print() const {
         std::cout << bits << "(" << to_ullong() << ")" << std::endl;
     }
 
-    // Сравнение//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ//
     bool operator==(const MyBitset& other) const {
         return bits == other.bits;
     }
@@ -135,25 +135,25 @@ public:
         return bits != other.bits;
     }
 
-    // Дружественные операторы для ввода/вывода//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅ//
     friend std::ostream& operator<<(std::ostream& os, const MyBitset& b) {
         os << b.to_string();
         return os;
     }
 
-    // Преобразование из строки (статический метод)//
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ)//
     static MyBitset from_string(const std::string& str) {
         return MyBitset(str);
     }
 
-    // Оператор += //
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ += //
     MyBitset& operator+=(const MyBitset& other) {
         unsigned long long result = this->to_ullong() + other.to_ullong();
         bits = std::bitset<N>(result);
         return *this;
     }
 
-    // Оператор * //
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ * //
     MyBitset& operator*(const MyBitset& other) {
         unsigned long long result = this->to_ullong() * other.to_ullong();
         bits = std::bitset<N>(result);
@@ -167,7 +167,7 @@ public:
         return is;
     }
 
-    // Перегрузка оператора [] для диапазона битов [start, end) //
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ [] пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ [start, end) //
     template <size_t M> MyBitset<M> operator()(size_t start, size_t end) const {
         if (start >= N || end > N || start >= end) {
             throw std::out_of_range("Invalid bit range");

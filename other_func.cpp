@@ -37,26 +37,27 @@ void starter_pack() {
 
 
     if (choice == 3) {
-        coman[0] = "00110010";  
-        coman[1] = "00011000";  
-        coman[3] = "10101000"; 
-        coman[4] = "00110010"; 
-        coman[5] = "00001000";  
-        coman[6] = "01010000"; 
-        coman[7] = "01111000"; 
+        coman[0] = "00110011";  //in a
+        coman[1] = "10000001";  //neg a
+        coman[3] = "10001001"; //st a
+        coman[4] = "10001010"; //ld a
+        coman[5] = "00100011"; // in a
+        coman[6] = "10000000";  //add a, b
+        coman[7] = "00001001"; //add 5
+        coman[8] = "10000111"; //out a
     }
 
     else if (choice == 4) {
-        coman[0] = "01000011";
-        coman[1] = "10001011";
-        coman[2] = "10001010";
-        coman[3] = "00100011";
-        coman[4] = "10000010";
-        coman[5] = "10000000";
-        coman[6] = "00000100";
-        coman[7] = "10000111";
+        coman[0] = "01100011"; //in b 3
+        coman[1] = "10001011"; //st b
+        coman[2] = "10001010"; //lb a
+        coman[3] = "00100011";// mov b=a+3
+        coman[4] = "10000010";// not a
+        coman[5] = "10000000";// add a+b
+        coman[6] = "00000100";//add a+4
+        coman[7] = "10000111";// out a
     }
-    
+
 }
 
 

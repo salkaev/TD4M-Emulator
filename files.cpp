@@ -1,19 +1,20 @@
-#include"files.h"
-#include<fstream>
-#include<iostream>
-#include<sstream>
+// files.cpp
+#include "registers.h"  // Р”РѕР±Р°РІСЊС‚Рµ СЌС‚РѕС‚ include
+#include "Mybitset.h"
+#include "securety_func.h"
+#include <iostream>
+#include <fstream>
 #include <string>
-#include<cctype>
-#include"registers.h"
-#include<thread>
-//Открытие бинарного файла и запись его в карту команд //
+#include <sstream>
+#include <chrono>
+#include <thread>  // Р”РѕР±Р°РІСЊС‚Рµ РґР»СЏ std::this_thread
 
 using namespace std;
 
 
 void read_file() {
 
-    //Работа с файлом //
+    //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ //
     string file, line, data;
     vector<string> vector_parts;
 
@@ -25,7 +26,7 @@ void read_file() {
         cout << "Error: cannot open file '" << file << "'.\n";
     }
 
-    // читаем весь файл в одну строку (как у вас было)
+    // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ)
     line.clear();
     while (std::getline(in, data)) {
         if (!line.empty()) line += ",";
@@ -37,8 +38,8 @@ void read_file() {
         cout << "Warning: file is empty.\n";
     }
 
-    // безопасный разбор через stringstream и разделитель ',',
-    // с защитой от переполнения и некорректных символов
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ stringstream пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ',',
+    // пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     {
         string token;
         stringstream ss(line);
@@ -48,7 +49,7 @@ void read_file() {
         }
     }
 
-    //Отфильруем наши данные и превратим их в двоичный код //
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ //
     int count = 0;
     for (auto part : vector_parts) {
         trim(part);
@@ -65,9 +66,9 @@ void read_file() {
             }
         }
         else {
-            // Попробуем распознать как десятич или как hex без 0x
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ hex пїЅпїЅпїЅ 0x
             try {
-                // если содержит не-цифры — считаем как ошибка и ставим 0
+                // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ-пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 0
                 bool all_hex = true;
                 for (char c : part) {
                     if (!isxdigit(static_cast<unsigned char>(c))) { all_hex = false; break; }
@@ -87,7 +88,7 @@ void read_file() {
             }
         }
         ++count;
-        if (count >= 16) break; // защита от переполнения карты
+        if (count >= 16) break; // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     }
 }
 void Zaur() {
@@ -117,7 +118,7 @@ void Zaur() {
             this_thread::sleep_for(chrono::milliseconds(100));
         }
 
-        // Работа с файлом
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         string file = "C:\\Users\\salka\\source\\repos\\salkaev\\TD4M-Emulator\\Zaur.txt";
         ifstream in(file);
         if (!in.is_open()) {

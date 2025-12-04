@@ -6,7 +6,7 @@
 #include <functional>
 using namespace std;
 
-// Вспомогательные проверки и безопасные конверторы
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 bool is_binary(const string& s, size_t expected_len) {
     if (s.size() != expected_len) return false;
     for (char c : s) if (c != '0' && c != '1') return false;
@@ -40,7 +40,7 @@ void trim(string& s) {
     s = s.substr(start, end - start + 1);
 }
 
-// Склейка двух 4-битных значений в одно 8-битное //
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ 4-пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ 8-пїЅпїЅпїЅпїЅпїЅпїЅ //
 MyBitset<8> Gluing(MyBitset<4> v1, MyBitset<4> v2) {
     string s1 = v1.to_string();
     string s2 = v2.to_string();

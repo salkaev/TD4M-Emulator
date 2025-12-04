@@ -40,6 +40,7 @@ int main() {
     for (int i = 0; i < 256; i++) {
         coman[i] = MyBitset<8>(); // Создаем пустую карту //
     }
+    update_XY_from_parts();  // Инициализируем XY
     cout << graffiti;
     cout << "\n\n\n\n\n";
     cout << "Instruction_Set\n"

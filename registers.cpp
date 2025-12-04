@@ -1,28 +1,34 @@
-﻿#include <iostream>
-#include <map>
-#include <vector>
-#include <bitset>
-#include <string>
-#include"Mybitset.h"
-#include"securety_func.h"
-using namespace std;
-int ok = 0;
-string registers;
+﻿// registers.cpp
+#include "registers.h"
+#include "Mybitset.h"
+#include "securety_func.h"
 
+// ВСЕ определения переменных ТОЛЬКО ЗДЕСЬ!
+int ok = 0;
+char ch = '\0';
+MyBitset<4> a = 0;
+MyBitset<4> Program_Counter = 0;
+int C_Flag = 0;
+int Z_Flag = 0;
+MyBitset<4> Register_A = 0;
+MyBitset<4> Register_B = 0;
+MyBitset<4> Output_Port = 0;
+MyBitset<4> Input_Port = 0;
+MyBitset<4> chose_Instruction = 0;
+MyBitset<4> choce = 0;
+MyBitset<4> key = 0;
+MyBitset<4> nots = 0;
+vector<vector<MyBitset<8>>> mapa;
+map<int, MyBitset<8>> coman;
 vector<pair<string, MyBitset<4>>> XY = {
     {"X", MyBitset<4>("0000")},
     {"Y", MyBitset<4>("0000")}
 };
+map<string, MyBitset<4>> registers;
 
-char ch;
-MyBitset<4> a;
-MyBitset<4> Program_Counter = 0;
-int C_Flag = 0;
-MyBitset<4> Register_A, Register_B, Output_Port, Input_Port, chose_Instruction, choce, key, nots;
-vector<vector<MyBitset<8>>> mapa;
-map<int, MyBitset<8>> coman;
+// 8-битный регистр XY
+MyBitset<8> bin_numb = 0;
 
-// Флаги для установки C_Flag на следующий ход //
 bool pendingC_next = false;
 bool pendingC_clear_after_show = false;
 

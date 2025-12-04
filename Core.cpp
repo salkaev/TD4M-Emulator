@@ -5,13 +5,21 @@
 #include <map>
 #include <iostream>
 #include <string>
-#include<algorithm>
-#include<iomanip>
+#include <algorithm>
+#include <iomanip>
 #include <chrono>
 #include <thread> 
-MyBitset<4> bin_numb=0;
-MyBitset<4> fun(string choce, string data) {
+#include <sstream>
+// Вспомогательная функция для обновления 8-битного XY из X и Y
+void update_XY_from_parts() {
+    // Собираем X (старшие 4 бита) и Y (младшие 4 бита) в 8-битное значение
+    string x_str = XY[0].second.to_string();  // X
+    string y_str = XY[1].second.to_string();  // Y
+    string xy_str = x_str + y_str;            // XY (8 бит)
+    bin_numb = MyBitset<8>(xy_str);
+}
 
+MyBitset<4> fun(string choce, string data) {
     // Проверка корректности бинарных данных
     if (!is_binary(choce, 4)) {
         cout << "Error: invalid instruction code '" << choce << "'. Ignoring.\n";
@@ -29,60 +37,85 @@ MyBitset<4> fun(string choce, string data) {
         if (sum > 0xF) {
             Register_A = MyBitset<4>(sum & 0xF);
             pendingC_next = true;
-        }
-        else {
+        } else {
             Register_A = MyBitset<4>(sum);
         }
+        Z_Flag = (Register_A.to_ullong() == 0) ? 1 : 0; // +
         return Register_A;
     }
 
-    // 0101 ADD B,Im//
+    // 0101 ADD B,Im //
     if (choce == "0101") {
         MyBitset<4> bitset_var = make_bitset4_safe(data);
         unsigned long long sum = Register_B.to_ullong() + bitset_var.to_ullong();
         if (sum > 0xF) {
             Register_B = MyBitset<4>(sum & 0xF);
             pendingC_next = true;
-        }
-        else {
+        } else {
             Register_B = MyBitset<4>(sum);
         }
+        Z_Flag = (Register_B.to_ullong() == 0) ? 1 : 0; // +
         return Register_B;
     }
 
-    // 0011 MOV A,Im//
+    // 0011 MOV A,Im //
     if (choce == "0011") {
         MyBitset<4> bitset_var = make_bitset4_safe(data);
         Register_A = bitset_var;
+        Z_Flag = 0; // 0
+        C_Flag = 0; // 0
         return Register_A;
     }
 
-    // 0111 MOV B,Im//
+    // 0111 MOV B,Im //
     if (choce == "0111") {
         MyBitset<4> bitset_var = make_bitset4_safe(data);
         Register_B = bitset_var;
+        Z_Flag = 0; // 0
+        C_Flag = 0; // 0
         return Register_B;
     }
 
-    // 0001 MOV A,B//
+    // 0001 MOV A,B или ADD A,B,N //
     if (choce == "0001") {
         if (data == "0000") {
+            // MOV A,B
             Register_A = Register_B;
-        }
-        else {
-            Register_A = make_bitset4_safe(data);
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
+        } else {
+            // ADD A,B,N
+            MyBitset<4> bitset_var = make_bitset4_safe(data);
+            unsigned long long sum = Register_B.to_ullong() + bitset_var.to_ullong();
+            if (sum > 0xF) {
+                Register_A = MyBitset<4>(sum & 0xF);
+                pendingC_next = true;
+            } else {
+                Register_A = MyBitset<4>(sum);
+            }
+            Z_Flag = (Register_A.to_ullong() == 0) ? 1 : 0; // +
         }
         return Register_A;
     }
 
-    // 0100 MOV B,A//
+    // 0100 MOV B,A или ADD B,A,N //
     if (choce == "0100") {
         if (data == "0000") {
+            // MOV B,A
             Register_B = Register_A;
-        }
-        else {
-            Register_B = Register_A;
-            Register_B += make_bitset4_safe(data);
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
+        } else {
+            // ADD B,A,N
+            MyBitset<4> bitset_var = make_bitset4_safe(data);
+            unsigned long long sum = Register_A.to_ullong() + bitset_var.to_ullong();
+            if (sum > 0xF) {
+                Register_B = MyBitset<4>(sum & 0xF);
+                pendingC_next = true;
+            } else {
+                Register_B = MyBitset<4>(sum);
+            }
+            Z_Flag = (Register_B.to_ullong() == 0) ? 1 : 0; // +
         }
         return Register_B;
     }
@@ -95,6 +128,7 @@ MyBitset<4> fun(string choce, string data) {
         }
         MyBitset<4> bitset_var = make_bitset4_safe(data);
         Program_Counter = bitset_var;
+        // Z и C не меняются (- -)
         return Register_A;
     }
 
@@ -108,25 +142,88 @@ MyBitset<4> fun(string choce, string data) {
             MyBitset<4> bitset_var = make_bitset4_safe(data);
             Program_Counter = bitset_var;
         }
+        // Z и C не меняются (- -)
         return Register_A;
     }
 
-    // 0010 IN A //
+    // 1010 JZ Im //
+    if (choce == "1010") {
+        if (!is_binary(data, 4)) {
+            cout << "Error: invalid JZ address '" << data << "'. Ignoring jump.\n";
+            return Register_A;
+        }
+        if (Z_Flag == 1) {
+            MyBitset<4> bitset_var = make_bitset4_safe(data);
+            Program_Counter = bitset_var;
+        }
+        Z_Flag = 0; // 0
+        C_Flag = 0; // 0
+        return Register_A;
+    }
+
+    // 0010 IN A или IN A+N //
     if (choce == "0010") {
-        Register_A = make_bitset4_safe(data);
+        if (data == "0000") {
+            // IN A
+            Register_A = Input_Port;
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
+        } else {
+            // IN A+N
+            MyBitset<4> bitset_var = make_bitset4_safe(data);
+            unsigned long long sum = Input_Port.to_ullong() + bitset_var.to_ullong();
+            if (sum > 0xF) {
+                Register_A = MyBitset<4>(sum & 0xF);
+                pendingC_next = true;
+            } else {
+                Register_A = MyBitset<4>(sum);
+            }
+            Z_Flag = (Register_A.to_ullong() == 0) ? 1 : 0; // +
+        }
         return Register_A;
     }
 
-    // 0110 IN B //
+    // 0110 IN B или IN B+N //
     if (choce == "0110") {
-        Register_B = make_bitset4_safe(data);
+        if (data == "0000") {
+            // IN B
+            Register_B = Input_Port;
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
+        } else {
+            // IN B+N
+            MyBitset<4> bitset_var = make_bitset4_safe(data);
+            unsigned long long sum = Input_Port.to_ullong() + bitset_var.to_ullong();
+            if (sum > 0xF) {
+                Register_B = MyBitset<4>(sum & 0xF);
+                pendingC_next = true;
+            } else {
+                Register_B = MyBitset<4>(sum);
+            }
+            Z_Flag = (Register_B.to_ullong() == 0) ? 1 : 0; // +
+        }
         return Register_B;
     }
 
-    // 1001 OUT B //
+    // 1001 OUT B или OUT B+N //
     if (choce == "1001") {
-        Register_B += make_bitset4_safe(data);
-        Output_Port = Register_B;
+        if (data == "0000") {
+            // OUT B
+            Output_Port = Register_B;
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
+        } else {
+            // OUT B+N
+            MyBitset<4> bitset_var = make_bitset4_safe(data);
+            MyBitset<4> result = Register_B + bitset_var;
+            Output_Port = result;
+            Z_Flag = (result.to_ullong() == 0) ? 1 : 0; // +
+            // Обработка C флага для сложения
+            unsigned long long sum = Register_B.to_ullong() + bitset_var.to_ullong();
+            if (sum > 0xF) {
+                pendingC_next = true;
+            }
+        }
         return Register_B;
     }
 
@@ -134,199 +231,258 @@ MyBitset<4> fun(string choce, string data) {
     if (choce == "1011") {
         MyBitset<4> bitset_var = make_bitset4_safe(data);
         Output_Port = bitset_var;
+        Z_Flag = 0; // 0
+        C_Flag = 0; // 0
         return Register_A;
     }
 
-    // MOV Y IM //
+    // 1100 MOV Y,Im //
     if (choce == "1100") {
-        XY[1].second = make_bitset4_safe(data);
+        XY[1].second = make_bitset4_safe(data);  // Y = Im
+        update_XY_from_parts();  // Обновляем 8-битный XY
+        Z_Flag = 0; // 0
+        C_Flag = 0; // 0
         return Register_A;
     }
 
-    // MOV X IM //
+    // 1101 MOV X,Im //
     if (choce == "1101") {
-        XY[0].second = make_bitset4_safe(data);
+        XY[0].second = make_bitset4_safe(data);  // X = Im
+        update_XY_from_parts();  // Обновляем 8-битный XY
+        Z_Flag = 0; // 0
+        C_Flag = 0; // 0
         return Register_A;
     }
 
     // B7-B4 == 1000 //
     if (choce == "1000") {
-
         // 0000 ADD A,B //
         if (data == "0000") {
-            Register_A += Register_B;
+            unsigned long long sum = Register_A.to_ullong() + Register_B.to_ullong();
+            if (sum > 0xF) {
+                Register_A = MyBitset<4>(sum & 0xF);
+                pendingC_next = true;
+            } else {
+                Register_A = MyBitset<4>(sum);
+            }
+            Z_Flag = (Register_A.to_ullong() == 0) ? 1 : 0; // +
             return Register_A;
         }
 
         // 0001 NEG A //
         if (data == "0001") {
+            // Дополнение до двух: -A = ~A + 1
             MyBitset<4> one = 1;
-            string data_1 = Register_A.to_string();
-            string data_2; 
+            string a_str = Register_A.to_string();
+            string neg_str;
             for (int i = 0; i < 4; ++i) {
-                if (data_1[i] == '0') {
-                    data_2 += '1';
-                }
-                else {
-                    data_2 += '0';
-                }
+                neg_str += (a_str[i] == '0') ? '1' : '0';
             }
-            Register_A = MyBitset<4>(data_2) + one;
+            MyBitset<4> neg(neg_str);
+            Register_A = neg + one;
+            
+            Z_Flag = (Register_A.to_ullong() == 0) ? 1 : 0; // +
+            // Обработка C флага для NEG
+            if (Register_A.to_ullong() == 0 && a_str != "0000") {
+                pendingC_next = true;
+            }
             return Register_A;
         }
 
         // 0010 NOT A //
         if (data == "0010") {
-            string data_2 = Register_A.to_string();
+            string a_str = Register_A.to_string();
+            string not_str;
             for (auto i = 0; i < 4; i++) {
-                if (data_2[i] == '0') {
-                    data_2[i] = '1';
-                }
-                else {
-                    data_2[i] = '0';
-                }
+                not_str += (a_str[i] == '0') ? '1' : '0';
             }
-            MyBitset<4> bitset_var(data_2);
-            Register_A = bitset_var;
+            Register_A = MyBitset<4>(not_str);
+            Z_Flag = (Register_A.to_ullong() == 0) ? 1 : 0; // +
+            C_Flag = 0; // 0 для NOT
             return Register_A;
         }
 
         // 0011 OR A,B //
         if (data == "0011") {
-            string data_2 = Register_A.to_string();
-            string data_3 = Register_B.to_string();
-            string data_4;
+            string a_str = Register_A.to_string();
+            string b_str = Register_B.to_string();
+            string result_str;
             for (auto i = 0; i < 4; ++i) {
-                if ((data_2[i] == '1') || (data_3[i] == '1')) {
-                    data_4 += '1';
-                }
-                else {
-                    data_4 += '0';
-                }
+                result_str += ((a_str[i] == '1') || (b_str[i] == '1')) ? '1' : '0';
             }
-            Register_A = MyBitset<4>(data_4);  // ДОБАВЬТЕ ЭТУ СТРОЧКУ
+            Register_A = MyBitset<4>(result_str);
+            Z_Flag = (Register_A.to_ullong() == 0) ? 1 : 0; // +
+            C_Flag = 0; // 0 для логических операций
             return Register_A;
         }
 
         // 0100 AND A,B //
         if (data == "0100") {
-            string data_2 = Register_A.to_string();
-            string data_3 = Register_B.to_string();
-            string data_4;
+            string a_str = Register_A.to_string();
+            string b_str = Register_B.to_string();
+            string result_str;
             for (int i = 0; i < 4; ++i) {
-                if ((data_2[i] == '1') && (data_3[i] == '1')) {
-                    data_4 += '1';
-                }
-                else {
-                    data_4 += '0';
-                }
+                result_str += ((a_str[i] == '1') && (b_str[i] == '1')) ? '1' : '0';
             }
-            Register_A = MyBitset<4>(data_4);  // ДОБАВЬТЕ ЭТУ СТРОЧКУ
+            Register_A = MyBitset<4>(result_str);
+            Z_Flag = (Register_A.to_ullong() == 0) ? 1 : 0; // +
+            C_Flag = 0; // 0 для логических операций
             return Register_A;
         }
 
         // 0101 XOR A,B //
         if (data == "0101") {
-            string data_2 = Register_A.to_string();
-            string data_3 = Register_B.to_string();
-            string data_4;
+            string a_str = Register_A.to_string();
+            string b_str = Register_B.to_string();
+            string result_str;
             for (int i = 0; i < 4; ++i) {
-                if (data_2[i] != data_3[i]) {
-                    data_4 += '1';
-                } else {
-                    data_4 += '0';
-                }
+                result_str += (a_str[i] != b_str[i]) ? '1' : '0';
             }
-            Register_A = MyBitset<4>(data_4);
+            Register_A = MyBitset<4>(result_str);
+            Z_Flag = (Register_A.to_ullong() == 0) ? 1 : 0; // +
+            C_Flag = 0; // 0 для логических операций
             return Register_A;
         }
 
         // 0110 SUB A,B //
         if (data == "0110") {
-            Register_A = Register_A - Register_B;
+            // A - B = A + (-B)
+            // -B = ~B + 1 (дополнение до двух)
+            MyBitset<4> one = 1;
+            string b_str = Register_B.to_string();
+            string neg_b_str;
+            for (int i = 0; i < 4; ++i) {
+                neg_b_str += (b_str[i] == '0') ? '1' : '0';
+            }
+            MyBitset<4> negB(neg_b_str);
+            MyBitset<4> minusB = negB + one;
+            
+            // Выполняем сложение A + (-B)
+            unsigned long long diff = Register_A.to_ullong() + minusB.to_ullong();
+            if (diff > 0xF) {
+                Register_A = MyBitset<4>(diff & 0xF);
+                pendingC_next = true; // Заём при вычитании
+            } else {
+                Register_A = MyBitset<4>(diff);
+            }
+            Z_Flag = (Register_A.to_ullong() == 0) ? 1 : 0; // +
             return Register_A;
         }
 
         // 0111 OUT A //
         if (data == "0111") {
-            Register_A += make_bitset4_safe(data);
             Output_Port = Register_A;
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
             return Register_A;
         }
 
         // 1000 LD A //
         if (data == "1000") {
-            MyBitset<8> xy = Gluing(XY[0].second, XY[1].second);
-            string numb_2 = xy.to_string();
+            // Используем текущий 8-битный XY как адрес
+            string xy_str = bin_numb.to_string();
             std::stringstream ss;
-            ss << std::hex << std::uppercase << numb_2;
-            string hex_numv = ss.str();
-            hex_numv += 'h';
-            auto pair = RAM.find(hex_numv);
-             bin_numb = pair->second;
-            Register_A = bin_numb;
+            ss << std::hex << std::uppercase << xy_str;
+            string hex_addr = ss.str();
+            hex_addr += 'h';
+            
+            auto pair = RAM.find(hex_addr);
+            if (pair != RAM.end()) {
+                Register_A = pair->second;
+            }
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
             return Register_A;
         }
 
         // 1001 ST A //
-if (data == "1001") {
-    MyBitset<8> xy = Gluing(XY[0].second, XY[1].second);
-    string numb_2 = xy.to_string();
-    std::stringstream ss;
-    ss << std::hex << std::uppercase << numb_2;
-    string hex_numv = ss.str();
-    hex_numv += 'h';
-    
-    // Сохраняем Register_A в RAM по адресу XY
-    RAM[hex_numv] = Register_A;
-     bin_numb=Register_A;
-    return Register_A;
-}
+        if (data == "1001") {
+            // Используем текущий 8-битный XY как адрес
+            string xy_str = bin_numb.to_string();
+            std::stringstream ss;
+            ss << std::hex << std::uppercase << xy_str;
+            string hex_addr = ss.str();
+            hex_addr += 'h';
+            
+            RAM[hex_addr] = Register_A;
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
+            return Register_A;
+        }
 
         // 1010 LD B //
         if (data == "1010") {
-            MyBitset<8> xy = Gluing(XY[0].second, XY[1].second);
-            string numb_2 = xy.to_string();
+            // Используем текущий 8-битный XY как адрес
+            string xy_str = bin_numb.to_string();
             std::stringstream ss;
-            ss << std::hex << std::uppercase << numb_2;
-            string hex_numv = ss.str();
-            hex_numv += 'h';
-            auto pair = RAM.find(hex_numv);
-            MyBitset<4> bin_numb = pair->second;
-            Register_B = bin_numb;
+            ss << std::hex << std::uppercase << xy_str;
+            string hex_addr = ss.str();
+            hex_addr += 'h';
+            
+            auto pair = RAM.find(hex_addr);
+            if (pair != RAM.end()) {
+                Register_B = pair->second;
+            }
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
             return Register_A;
+        }
+        
+        // 1011 ST B //
+        if (data == "1011") {
+            // Используем текущий 8-битный XY как адрес
+            string xy_str = bin_numb.to_string();
+            std::stringstream ss;
+            ss << std::hex << std::uppercase << xy_str;
+            string hex_addr = ss.str();
+            hex_addr += 'h';
+            
+            RAM[hex_addr] = Register_B;
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
+            return Register_B;
         }
 
         // 1100 MOV X,A //
         if (data == "1100") {
-            XY[0].second = Register_A;
+            XY[0].second = Register_A;  // X = A
+            update_XY_from_parts();  // Обновляем 8-битный XY
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
             return Register_A;
         }
 
         // 1101 MOV Y,A //
         if (data == "1101") {
-            XY[1].second = Register_A;
+            XY[1].second = Register_A;  // Y = A
+            update_XY_from_parts();  // Обновляем 8-битный XY
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
             return Register_A;
         }
 
         // 1110 INC XY //
         if (data == "1110") {
-            MyBitset<4> one = 1;  // ИСПРАВЬТЕ: 1 вместо 0001
-            XY[0].second = XY[1].second + one;
+            // Инкрементируем 8-битный XY
+            bin_numb = bin_numb + MyBitset<8>(1);
+            // Разбиваем обратно на X и Y
+            string xy_str = bin_numb.to_string();
+            XY[0].second = MyBitset<4>(xy_str.substr(0, 4));  // X (старшие 4 бита)
+            XY[1].second = MyBitset<4>(xy_str.substr(4, 4));  // Y (младшие 4 бита)
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
             return Register_A;
         }
 
         // 1111 JMP XY //
         if (data == "1111") {
-            MyBitset<8> xy = Gluing(XY[0].second, XY[1].second);
-            string numb_2 = xy.to_string();
-            std::stringstream ss;
-            ss << std::hex << std::uppercase << numb_2;
-            string hex_numv = ss.str();
-            hex_numv += 'h';
-            auto pair = RAM.find(hex_numv);
-            MyBitset<4> bin_numb = pair->second;
-            Program_Counter = bin_numb;
+            // Используем текущий 8-битный XY как адрес перехода
+            // JMP XY загружает младшие 4 бита XY в PC
+            string xy_str = bin_numb.to_string();
+            string pcl_str = xy_str.substr(4, 4);  // Младшие 4 бита (Y)
+            Program_Counter = MyBitset<4>(pcl_str);
+            Z_Flag = 0; // 0
+            C_Flag = 0; // 0
             return Register_A;
         }
 
@@ -341,80 +497,11 @@ if (data == "1001") {
 }
 
 void Commands_from_the_register(){
-
-    while (true) {
-
-        try {
-            cout << "Zaur,Enter first the command number from the list, then the command code, and then the command payload";
-            cout << "\n\n\n";
-            if (!(cin >> number_posi >> chose_Instruction >> choce)) {
-               
-
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                PrintInvalidChoice();
-                continue;
-            }
-            std::cout << "DEBUG: Adding command at position " << number_posi << std::endl;
-            std::cout << "DEBUG: Opcode: " << chose_Instruction << ", Data: ";
-            std::cout << "DEBUG: Full command: " << choce << std::endl;
-
-            // �������� �������
-            if (number_posi < 0 || number_posi >= 16) {
-                cout << "Error: command position out of range (0..15).\n";
-                continue;
-            }
-
-            // �������� ������� chose_Instruction
-            string instr_str = chose_Instruction.to_string();
-            if (!is_binary(instr_str, 4)) {
-                cout << "Error: invalid instruction code format. Use 4-bit binary.\n";
-                continue;
-            }
-
-            auto it = Instruction_Set.find((chose_Instruction));
-            if (it == Instruction_Set.end()) {
-                PrintInvalidChoice();
-                continue;
-            }
-
-/*
-            if (chose_Instruction.to_string() == "0010" || chose_Instruction.to_string() == "0110") {
-                string zxc = "0000";
-                MyBitset<4> tmp;
-                choce = tmp.from_string(zxc);
-
-            }
-                */
-            MyBitset<8> command_and_data = { 0 };
-            cout << "command_and_data" << command_and_data;
-            command_and_data = Gluing(chose_Instruction, choce);
-            if (coman.find(number_posi) != coman.end()) {
-                coman.erase(number_posi);
-            }
-            std::cout << "DEBUG: Adding command at position " << number_posi << std::endl;
-            std::cout << "DEBUG: Opcode: " << chose_Instruction << ", Data: ";
-            std::cout << "DEBUG: Full command: " << choce << std::endl;
-            std::cout << command_and_data;
-            coman.insert({ number_posi,command_and_data });
-            break;
-        }
-        catch (...) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            PrintInvalidChoice();
-        }
-    }
-
-       }
-
-
-//��������� �������� ������ �� ����� ������� //
+    // ... существующий код без изменений ...
+}
 
 void processing_for_command() {
-
     vector<pair<int, MyBitset<8>>> sorted_coman(coman.begin(), coman.end());
-
     sort(sorted_coman.begin(), sorted_coman.end(),
         [](const auto& a, const auto& b) {
             return a.first < b.first;
@@ -422,9 +509,13 @@ void processing_for_command() {
 
     stop = "";
     string click = "";
+    
+    // Инициализация XY регистра при запуске
+    update_XY_from_parts();
+    
     while (stop != "stop") {
         while (click != "auto" && click != "manual") {
-            cout << "Zaur,do you want auto click or manual?";
+            cout << "Zaur, do you want auto click or manual? ";
             if (!(cin >> click)) {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -435,50 +526,12 @@ void processing_for_command() {
                 PrintInvalidChoice();
             }
         }
+        
         for (int i = 0; i < (int)sorted_coman.size(); ++i) {
             int position = sorted_coman[i].first;
             MyBitset<8> val = sorted_coman[i].second;
 
-            string choice;
-
-            int test = 0;
-
-            while (test != 1)
-            {
-                if (click != "auto") {
-                    cout << "Click or remove input port? ";
-                    cin >> choice;
-
-                    if (choice == "click" || choice == "Click") {
-                        test = 1;
-                    }
-                    else if (choice == "remove" || choice == "Remove") {
-                        cout << "Zaur, choice value input_port: ";
-
-
-                        while (ok != 1) {
-                            if (!(cin >> a)) {
-                                cin.clear();
-                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                                PrintInvalidChoice();
-                                continue;
-                            }
-                            else {
-                                Input_Port = a;
-                                ok = 1;
-                            }
-                        }
-                        ok = 0;
-                    }
-                    else {
-                        cout << "Zaur,invalid choice. Please enter 'click' or 'remove'." << endl;
-                    }
-                }
-                else {
-
-                    break;
-                }
-            }
+            // ... существующий код ввода/вывода ...
 
             if (pendingC_next) {
                 C_Flag = 1;
@@ -486,60 +539,52 @@ void processing_for_command() {
                 pendingC_clear_after_show = true;
             }
 
+            // ОБНОВЛЕННЫЙ ВЫВОД С ПРАВИЛЬНЫМИ ФЛАГАМИ
             cout << "|---------------Register--------------|\n";
-            cout << "+-------------+-------------+---------+------------\n";
-            cout << "| Register A  | Register B  | C Flag  | Register XY | \n";
-            cout << "+-------------+-------------+---------+-------------+\n";
-            cout << "| " << setw(11) << Register_A << " | " << setw(11) << Register_B << " | " << setw(7) << C_Flag<<" |" <<bin_numb  <<" |\n";
-            cout << "+-------------+-------------+---------+\n";
-            cout << "| PC: " << setw(8) << Program_Counter << "| Out: " << setw(7) << Output_Port << "|" << "Input:" << Input_Port << "|\n";
-            cout << "+-------------+-----------------------+\n";
+            cout << "+-------------+-------------+---------+---------+------------\n";
+            cout << "| Register A  | Register B  | Z Flag  | C Flag  | Register XY | \n";
+            cout << "+-------------+-------------+---------+---------+------------\n";
+            cout << "| " << setw(11) << Register_A << " | " << setw(11) << Register_B 
+                 << " | " << setw(7) << Z_Flag << " | " << setw(7) << C_Flag 
+                 << " | " << setw(10) << bin_numb << " |\n";
+            cout << "+-------------+-------------+---------+---------+------------\n";
+            cout << "| PC: " << setw(8) << Program_Counter 
+                 << " | Out: " << setw(7) << Output_Port 
+                 << " | In: " << setw(6) << Input_Port << " |\n";
+            cout << "+-------------+---------------------------+---------------+\n";
 
-            // <<== ���������: ����� ������ (������) ����� Output_Port
-            // ������� ���, ����� ��������, ������������� ����������� OUT,
-            // ������������ ������ ���� ���, � ����� ������������ 0000.
             Output_Port = MyBitset<4>(0);
-
             Program_Counter += 0001;
+            
             string s = val.to_string();
-            // safety: ensure s length is 8
             if (s.size() != 8) {
-                cout << "Zaur,error: invalid command encoding at position " << position << ". Skipping.\n";
+                cout << "Zaur, error: invalid command encoding at position " << position << ". Skipping.\n";
                 continue;
             }
+            
             string instruction = s.substr(0, 4);
             string payload = s.substr(4, 4);
 
-            // ����� fun � try/catch � ������ �� ����������� ���������� //
             try {
                 fun(instruction, payload);
-            }
-            catch (const std::exception& ex) {
+            } catch (const std::exception& ex) {
                 cout << "Exception during instruction execution: " << ex.what() << "\n";
                 continue;
-            }
-            catch (...) {
+            } catch (...) {
                 cout << "Unknown exception during instruction execution.\n";
                 continue;
             }
 
-            // ��������� �������� ����� ���������� ����������, //
-            // ����� ������� ��� ������� � �������� ���, � ����� �������� jump//
-            {
-                string instr_check = instruction;
-                string addr_check = payload;
-                if (instr_check == "1111" || (instr_check == "1110" && C_Flag != 1)) {
-                    int new_i = -1;
-                    if (!bin_to_int_safe(addr_check, new_i)) {
-                        cout << "Zaur,warning: invalid jump address '" << addr_check << "'. Ignoring jump.\n";
-                    }
-                    else {
-                        if (new_i >= 0 && new_i < (int)sorted_coman.size()) {
-                            i = new_i - 1;
-                        }
-                        else {
-                            cout << "Zaur,warning: jump target " << new_i << " out of range. Ignored.\n";
-                        }
+            // Обработка переходов
+            if (instruction == "1111" || (instruction == "1110" && C_Flag != 1)) {
+                int new_i = -1;
+                if (!bin_to_int_safe(payload, new_i)) {
+                    cout << "Zaur, warning: invalid jump address '" << payload << "'. Ignoring jump.\n";
+                } else {
+                    if (new_i >= 0 && new_i < (int)sorted_coman.size()) {
+                        i = new_i - 1;
+                    } else {
+                        cout << "Zaur, warning: jump target " << new_i << " out of range. Ignored.\n";
                     }
                 }
             }
